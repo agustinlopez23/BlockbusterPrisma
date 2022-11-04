@@ -1,5 +1,4 @@
 const { PrismaClient } = require("@prisma/client");
-const ejectFetch = require("./fetch");
 const prisma = new PrismaClient();
 const axios = require("axios");
 
