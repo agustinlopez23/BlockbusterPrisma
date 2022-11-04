@@ -24,6 +24,8 @@ router.post("/register", UsersController.register);
 router.post("/movie", checkLoggedIn, MovieController.addMovie);
 router.post("/rent/:code", checkLoggedUser, RentController.rentMovie);
 router.post("/favourite/:code", checkLoggedUser, MovieController.addFavourite);
+//PUT
+router.put("/rent/:id",checkLoggedUser, RentController.returnRent);
 //ERROR HANDLER
 router.use(errorHandler.notFound);
 
