@@ -46,6 +46,7 @@ model FavoriteFilms{
     movie_code String @unique @id
     movies Movies[]
     user_id Int 
+    review String?
     user User @relation(fields: [user_id], references: [id])
 } 
 

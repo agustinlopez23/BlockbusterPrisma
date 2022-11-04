@@ -19,6 +19,7 @@ router.get("/logout", checkLoggedUser, UsersController.logout);
 router.get("/login", (req, res) => res.send("You must to logued in"));
 router.get('/rent/user', checkLoggedUser, RentController.rentsByUser)
 //POST
+router.post("/favourites/:code",checkLoggedUser, MovieController.addFavourite);
 router.post("/login", UsersController.login);
 router.post("/register", UsersController.register);
 router.post("/movie", checkLoggedIn, MovieController.addMovie);

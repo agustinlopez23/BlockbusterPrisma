@@ -111,7 +111,7 @@ const addFavourite = async (req, res, next) => {
     const { review } = req.body;
 
     prisma.movies.findUnique({ where: { code: code } }).then((film) => {
-      if (!film) throw new Error(" Pelicula no disponible ");
+      if (!film) throw new Error(" Movie dont avalaible ");
 
       const newFavouriteFilms = {
         movie_code: film.code,
@@ -119,7 +119,7 @@ const addFavourite = async (req, res, next) => {
         review: review,
       };
 
-      prisma.favouritefilms.create({data:newFavouriteFilms}).then((newFav) => {
+      prisma.favoriteFilms.create({data:newFavouriteFilms}).then((newFav) => {
         if (!newFav) throw new Error("FAILED to add favorite movie");
 
         res.status(201).send("Movie Added to Favorites");
