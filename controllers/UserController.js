@@ -1,11 +1,10 @@
-const db = require("../models/index");
-const { User } = db;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const {PrismaClient} = require("@prisma/client")
+const prisma = new PrismaClient()
 const login = (req, res, next) => {
   let body = req.body;
-  User.findOne({ where: { email: body.email } })
+  prisma.user.findUnique({ where: { email: body.email } })
     .then((usuarioDB) => {
       if (!usuarioDB) {
         return res.status(400).json({
@@ -51,7 +50,7 @@ const register = (req, res, next) => {
     phone,
     password: bcrypt.hashSync(password, 10),
   };
-  User.create(usuario).then((usuarioDB) => {
+  prisma.user.create({data:usuario}).then((usuarioDB) => {
     return res
       .status(201)
       .json({

@@ -1,15 +1,15 @@
 const fetch = (url) =>
   import("node-fetch").then(({ default: fetch }) => fetch(url));
 const GHIBLI_APP = "https://ghibliapi.herokuapp.com/films/";
-const db = require("../models/index");
-const { Movie, FavouriteFilms } = db;
+const {PrismaClient} = require("@prisma/client")
+const prisma = new PrismaClient()
 // JsonWebToken
 const jwt = require("jsonwebtoken");
 
 async function getFilmFromAPIByName(name) {
   let films = await fetch("https://ghibliapi.herokuapp.com/films");
   films = await films.json();
-  return films.find((film) => film.title.includes(name));
+  return prisma.films.findUnique((film) => film.title.includes(name));
 }
 
 const getMovies = async (req, res) => {
@@ -100,7 +100,7 @@ const addMovie = (req, res, next) => {
     stock: 5,
     rentals: 0,
   };
-  Movie.create(newMovie)
+  prisma.movies.create(newMovie)
     .then((movie) => res.status(201).send("Movie Stocked"))
     .catch((err) => next(err));
 };
@@ -110,7 +110,7 @@ const addFavourite = async (req, res, next) => {
     const code = req.params.code;
     const { review } = req.body;
 
-    Movie.findOne({ where: { code: code } }).then((film) => {
+    prisma.movies.findUnique({ where: { code: code } }).then((film) => {
       if (!film) throw new Error(" Pelicula no disponible ");
 
       const newFavouriteFilms = {
@@ -119,7 +119,7 @@ const addFavourite = async (req, res, next) => {
         review: review,
       };
 
-      FavouriteFilms.create(newFavouriteFilms).then((newFav) => {
+      prisma.favouritefilms.create(newFavouriteFilms).then((newFav) => {
         if (!newFav) throw new Error("FAILED to add favorite movie");
 
         res.status(201).send("Movie Added to Favorites");

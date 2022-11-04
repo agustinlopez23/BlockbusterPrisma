@@ -1,21 +1,20 @@
-const db = require('../models/index');
-const { Rent, Movie } = db
-const { Op } = require('sequelize');
+const {PrismaClient} = require("@prisma/client")
+const prisma = new PrismaClient()
 
 const rentMovie = (req, res, next) => {
     
     const { code } = req.params;
     
-    Movie.findOne({ where: { code: code, stock: { [Op.gt]: 0 } } })
+    prisma.movies.findUnique({ where: { code: code, stock: { gt:0 } } })
     .then(rental => {
             if (!rental) throw new Error(' Missing stock ')
-            Rent.create({
+            prisma.rents.create({
                 MovieCode: rental.code,
                 id_user: req.user.id,
                 rent_date:new Date(Date.now()),
                 refund_date: new Date(Date.now() + (3600 * 1000 * 24) * 7),
             }).then(data => {
-                Movie.update({ stock: rental.stock - 1, rentals: rental.rentals + 1 }, { where: { code: rental.code } })
+                prisma.movies.update({ stock: rental.stock - 1, rentals: rental.rentals + 1 }, { where: { code: rental.code } })
                     .then(() => res.status(201).send(data))
             })
         
@@ -34,7 +33,7 @@ const lateRefund = async (originalPrice, daysLate) => {
 }
 const rentsByUser = async (req, res, next) => {
 
-    const rentByUsers = await Rent.findAll({ where: { id_user: req.user.id } })
+    const rentByUsers = await prisma.rents.findUnique({ where: { id_user: req.user.id } })
 
     // return rentByUsers
     // console.log(rentByUsers);
