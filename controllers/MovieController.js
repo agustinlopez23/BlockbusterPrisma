@@ -114,12 +114,12 @@ const addFavourite = async (req, res, next) => {
       if (!film) throw new Error(" Pelicula no disponible ");
 
       const newFavouriteFilms = {
-        MovieCode: film.code,
-        UserId: req.user.id,
+        movie_code: film.code,
+        user_id: req.user.id,
         review: review,
       };
 
-      prisma.favouritefilms.create(newFavouriteFilms).then((newFav) => {
+      prisma.favouritefilms.create({data:newFavouriteFilms}).then((newFav) => {
         if (!newFav) throw new Error("FAILED to add favorite movie");
 
         res.status(201).send("Movie Added to Favorites");
@@ -131,8 +131,8 @@ const addFavourite = async (req, res, next) => {
 };
 
 const allFavouritesMovies = async (req, res, next) => {
-  const allFilms = await FavouriteFilms.findAll({
-    where: { UserId: req.user.id },
+  const allFilms = await prisma.favoriteFilms.findMany({
+    where: { user_id: req.user.id },
   });
 
   const filmReduced = allFilms.map((film) => {
@@ -141,8 +141,8 @@ const allFavouritesMovies = async (req, res, next) => {
     } else {
       return {
         id: film.id,
-        MovieCode: film.MovieCode,
-        UserId: film.UserId,
+        movie_code: film.MovieCode,
+        user_id: film.UserId,
       };
     }
   });
