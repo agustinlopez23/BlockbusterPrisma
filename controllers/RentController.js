@@ -41,7 +41,6 @@ const lateRefund = async (originalPrice, daysLate) => {
   return finalPrice;
 };
 const rentsByUser = async (req, res, next) => {
-
   try {
     return prisma.rents
       .findMany({ where: { id_user: req.user.id } })
@@ -54,8 +53,6 @@ const rentsByUser = async (req, res, next) => {
     console.log(error);
     res.status(500).send("Service unavailable");
   }
-
-  
 };
 
 const returnRent = async (req, res) => {
@@ -79,8 +76,8 @@ const returnRent = async (req, res) => {
       },
     });
 
-    movie.stock++
-    
+    movie.stock++;
+
     await prisma.movies.update({
       where: {
         code: movie.code,
@@ -100,11 +97,10 @@ const returnRent = async (req, res) => {
     });
 
     res.status(200).json({
-        message: "The movie was returned",
-        price: rentPrice(rent.userRefund_date, rent.refund_date),
-        
-      });
-    await prisma.rents.delete( {where: { id_rent: id} } )
+      message: "The movie was returned",
+      price: rentPrice(rent.userRefund_date, rent.refund_date),
+    });
+    await prisma.rents.delete({ where: { id_rent: id } });
   } catch (error) {
     console.log(error);
 
@@ -117,5 +113,5 @@ const returnRent = async (req, res) => {
 module.exports = {
   rentMovie,
   rentsByUser,
-  returnRent
+  returnRent,
 };
