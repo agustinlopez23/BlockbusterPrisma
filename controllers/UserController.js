@@ -3,7 +3,8 @@ const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const login = (req, res, next) => {
-  let body = req.body;
+  try {
+    let body = req.body;
   prisma.user
     .findUnique({ where: { email: body.email } })
     .then((usuarioDB) => {
@@ -41,6 +42,12 @@ const login = (req, res, next) => {
       });
     })
     .catch((error) => next(error));
+  } catch (error) {
+    const { name } = error;
+    const errorMessage = prismaError[name] || "Internal server error";
+    res.status(500).json({ errorMessage });
+  }
+  
 };
 
 const register = (req, res, next) => {
@@ -76,9 +83,16 @@ const register = (req, res, next) => {
 };
 
 const logout = (req, res, next) => {
-  req.user = null;
+  try {
+    req.user = null;
   console.log("LoguedOut");
   res.redirect("/login");
+  } catch (error) {
+    const { name } = error;
+    const errorMessage = prismaError[name] || "Internal server error";
+    res.status(500).json({ errorMessage });
+  }
+  
 };
 module.exports = {
   login,

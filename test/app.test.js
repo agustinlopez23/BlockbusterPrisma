@@ -3,10 +3,9 @@ const { response } = require("express");
 const request = require("supertest");
 const assert = require("chai").assert;
 const { app } = require("../app");
-const db = require("../models/index");
 const { User } = db;
 const bcrypt = require("bcrypt");
-const { BaseError } = require("sequelize");
+
 
 beforeEach(() => {
   db.sequelize.truncate({ cascade: true });

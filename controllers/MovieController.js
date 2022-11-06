@@ -1,10 +1,11 @@
 const fetch = (url) =>
   import("node-fetch").then(({ default: fetch }) => fetch(url));
 const GHIBLI_APP = "https://ghibliapi.herokuapp.com/films/";
-const {PrismaClient} = require("@prisma/client")
-const prisma = new PrismaClient()
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
 // JsonWebToken
 const jwt = require("jsonwebtoken");
+
 
 async function getFilmFromAPIByName(name) {
   let films = await fetch("https://ghibliapi.herokuapp.com/films");
@@ -12,19 +13,17 @@ async function getFilmFromAPIByName(name) {
   return prisma.films.findUnique((film) => film.title.includes(name));
 }
 const getMovies = async (req, res) => {
-
   try {
-
     const { order } = req.query;
-    
 
     const response = await fetch("https://ghibliapi.herokuapp.com/films");
     const movies = await response.json();
-    if (order === "desc") {
-      movies.sort((a, b) => b.release_date - a.release_date);
-    } else if (order === "asc") {
-      movies.sort((a, b) => a.release_date - b.release_date);
-    }
+      if (order === "desc") {
+        movies.sort((a, b) => b.release_date - a.release_date);
+      } else if (order === "asc") {
+        movies.sort((a, b) => a.release_date - b.release_date);
+      }
+   
 
     movies.length > 0
       ? res.status(200).json(movies)
@@ -50,27 +49,9 @@ const getMovies = async (req, res) => {
 //   res.status(200).send(movies);
 // };
 
-const getMoviesByRuntime = async (req, res) => {
-  const maxRuntime = req.params.max;
-  let movies = await fetch("https://ghibliapi.herokuapp.com/films");
-  movies = await movies.json();
-  movies = movies.map((movie) => ({
-    id: movie.id,
-    title: movie.title,
-    description: movie.description,
-    director: movie.director,
-    producer: movie.producer,
-    release_date: movie.producer,
-    running_time: movie.running_time,
-    rt_score: movie.rt_score,
-  }));
-  if (maxRuntime < 137)
-    movies = movies.filter((movie) => movie.running_time <= maxRuntime);
-  res.status(200).send(movies);
-};
-
 const getMovieDetails = async (req, res) => {
-  const { id } = req.params;
+  try {
+    const { id } = req.params;
   let movies = await fetch("https://ghibliapi.herokuapp.com/films");
   movies = await movies.json();
   movies = movies.map((movie) => ({
@@ -85,6 +66,12 @@ const getMovieDetails = async (req, res) => {
   }));
   const movie = movies.find((movie) => movie.id === id);
   res.status(200).send(movie);
+  } catch (error) {
+    const { name } = error;
+    const errorMessage = prismaError[name] || "Internal server error";
+    res.status(500).json({ errorMessage });
+  }
+  
 };
 
 //Por Body
@@ -96,7 +83,7 @@ const getMovieDetails = async (req, res) => {
 //   res.status(200).send(movie);
 // };
 
-//By Params - you should use a middle dash instead of a space 
+//By Params - you should use a middle dash instead of a space
 const getMovieByTitle = async (req, res) => {
   try {
     const { title } = req.params;
@@ -121,14 +108,14 @@ const addMovie = (req, res, next) => {
     stock: 5,
     rentals: 0,
   };
-  prisma.movies.create(newMovie)
+  prisma.movies
+    .create(newMovie)
     .then((movie) => res.status(201).send("Movie Stocked"))
     .catch((err) => next(err));
 };
 
 const addFavourite = async (req, res, next) => {
   try {
-    
     const code = req.params.code;
     const { review } = req.body;
 
@@ -140,13 +127,14 @@ const addFavourite = async (req, res, next) => {
         user_id: req.user.id,
         review: review,
       };
-      
-      prisma.favoriteFilms.create({data:newFavouriteFilms}).then((newFav) => {
 
-        if (!newFav) throw new Error("FAILED to add favorite movie");
+      prisma.favoriteFilms
+        .create({ data: newFavouriteFilms })
+        .then((newFav) => {
+          if (!newFav) throw new Error("FAILED to add favorite movie");
 
-        res.status(201).send("Movie Added to Favorites");
-      });
+          res.status(201).send("Movie Added to Favorites");
+        });
     });
   } catch (error) {
     (error) => next(error);
@@ -154,28 +142,19 @@ const addFavourite = async (req, res, next) => {
 };
 
 const allFavouritesMovies = async (req, res, next) => {
-  const allFilms = await prisma.favoriteFilms.findMany({
-    where: { user_id: req.user.id },
-  });
-
-  const filmReduced = allFilms.map((film) => {
-    if (film.review != null) {
-      return film;
-    } else {
-      return {
-        id: film.id,
-        movie_code: film.MovieCode,
-        user_id: film.UserId,
-      };
-    }
-  });
-  res.status(200).json(filmReduced);
+  try {
+    const allFilms = await prisma.favoriteFilms.findMany({
+      where: { user_id: req.user.id },
+    });
+    res.status(200).json(allFilms);
+  } catch (error) {
+    res.status(500).json({ error: "Error in Data Base" });
+  }
 };
 
 module.exports = {
   getMovies,
   getMovieDetails,
-  getMoviesByRuntime,
   addMovie,
   addFavourite,
   allFavouritesMovies,

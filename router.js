@@ -10,14 +10,13 @@ const RentController = require("./controllers/RentController");
 router.use(bodyParser.json());
 //GET
 router.get("/movies/:id", MovieController.getMovieDetails);
-
 router.get("/movies", MovieController.getMovies);
 router.get("/movies/title/:title", MovieController.getMovieByTitle);
-router.get("/runtime/:max", MovieController.getMoviesByRuntime);
 router.get("/favourites", checkLoggedUser, MovieController.allFavouritesMovies);
 router.get("/logout", checkLoggedUser, UsersController.logout);
 router.get("/login", (req, res) => res.send("You must to logued in"));
 router.get('/rent/user', checkLoggedUser, RentController.rentsByUser)
+router.get('/rents/all', RentController.getAllRents)
 //POST
 router.post("/favourites/:code",checkLoggedUser, MovieController.addFavourite);
 router.post("/login", UsersController.login);
