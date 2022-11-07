@@ -194,4 +194,8 @@ npm run seed
             res.body:[Array con todos los favoritos de ese usuario]
             
             
+<<<<<<< HEAD
         
+=======
+        
+>>>>>>> f3f160c0483a78c20a0d6d8d28bfcbaf63de793b
