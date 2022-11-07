@@ -15,6 +15,8 @@ model User {
     dni String @unique
     phone String @unique
     password String 
+    updatedAt DateTime @default(now())
+    createdAt DateTime @default(now())
     rents Rents[]
     favoriteFilms FavoriteFilms[]
     role Role @default(USER)
@@ -29,6 +31,8 @@ model Rents {
     rent_date DateTime @default(now())
     refund_date DateTime @default(now())
     userRefund_date DateTime @default(now())
+    updatedAt DateTime @default(now())
+    createdAt DateTime @default(now())
 }
 
 model Movies {
