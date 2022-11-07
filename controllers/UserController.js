@@ -7,10 +7,8 @@ const login = (req, res, next) => {
   try {
     let { email, password } = req.body;
     if (!email || !password) {
-      res.status(404).send.json({
-        status: "error",
-        error: "All fields must be completed",
-      });
+      res.status(400)
+          .json({ errorMessage: "All Fields need to be completed" });
     } else {
       let { email, password } = req.body;
       prisma.user
@@ -76,8 +74,7 @@ const register = async (req, res, next) => {
         },
       });
       if (verifyUser.length > 0)
-        return res
-          .status(400)
+        return res.status(400)
           .json({ errorMessage: "Email, dni or phone is already in use" });
       let usuario = {
         email,
