@@ -10,7 +10,6 @@ const FavoritesController = require("./controllers/FavoritesController")
 
 router.use(bodyParser.json());
 //GET
-
 router.get("/movies/:id", MovieController.getMovieDetails);
 router.get("/movies", MovieController.getMovies);
 router.get("/movies/title/:title", MovieController.getMovieByTitle);
