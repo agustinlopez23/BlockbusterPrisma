@@ -42,13 +42,14 @@ model Movies {
     createdAt String
 }
 
-model FavoriteFilms{
-    movie_code String @unique @id
-    movies Movies[]
-    user_id Int 
-    review String?
-    user User @relation(fields: [user_id], references: [id])
-} 
+model FavoriteFilms {
+  id       Int   @id @default(autoincrement())
+  id_user  Int
+  id_movie String
+  review   String? 
+  movie    Movies @relation(fields: [id_movie], references: [code], onDelete: Cascade)
+  user     User  @relation(fields: [id_user], references: [id], onDelete: Cascade)
+}
 
 enum Role {
     USER

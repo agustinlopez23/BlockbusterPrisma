@@ -1,5 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
-const { limitAndOffset } = require("../helpers/limitOffset");
+
 const { rentPrice } = require("../helpers/rentPrice");
 const prisma = new PrismaClient();
 
@@ -78,13 +78,22 @@ const lateRefund = async (originalPrice, daysLate) => {
 };
 const rentsByUser = async (req, res, next) => {
   try {
-    return prisma.rents
+    let { order } = req.query;
+
+    order ? (order = order) : (order = "asc");
+    let rentsbyuser= await prisma.rents
       .findMany({ where: { id_user: req.user.id } })
-      .then((data) => {
-        data
-          ? res.status(201).send(data)
-          : res.status(404).send("Movie Not Found");
-      });
+      if (order === "asc") {
+
+        rentsbyuser.sort((a, b) => a.rent_date - b.rent_date)
+  
+      } else if (order === "desc") {
+  
+        rentsbyuser.sort((a, b) => b.rent_date - a.rent_date)
+      }
+      rentsbyuser.length > 0
+      ? res.status(200).json(rentsbyuser)
+      : res.status(404).json({ errorMessage: "Movies not found" });
   } catch (error) {
     console.log(error);
     res.status(500).send("Service unavailable");
