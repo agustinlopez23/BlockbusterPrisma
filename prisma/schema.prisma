@@ -1,6 +1,7 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-
+//"DATABASE_URL_TEST" for testing
+//"DATABASE_URL" for production
 generator client {
   provider = "prisma-client-js"
 }
