@@ -9,15 +9,18 @@ const MovieController = require("../controllers/MovieController");
 const RentController = require("../controllers/RentController");
 const UserController = require("../controllers/UserController");
 const FavoriteController = require("../controllers/FavoritesController");
-
 const bcrypt = require("bcrypt");
 
-// beforeEach(() => {
-//   prisma.user.delete()
+
+beforeEach(async function () {
+   prisma.user.delete()
+});
+
+ //beforeEach(() => {
+  // prisma.user.delete()
 //   prisma.rents.delete()
 //   prisma.movies.delete()
 //   prisma.favoriteFilms.delete()
-
 // });
 // const userExample = {
 //   email: "cristian@gmail.com",
@@ -34,6 +37,7 @@ const bcrypt = require("bcrypt");
 //   review: "Colocar Review"
 // }
 describe("POST /register", () => {
+  
   const userExample = {
     email: "cristian@gmail.com",
     password: "avalith",
@@ -120,8 +124,7 @@ describe("POST /register", () => {
   });
 });
 describe("POST /rent/:code", () => {
-  // beforeEach(done => {
-  // })
+  
 
   const userExample = {
     email: "cristian@gmail.com",
@@ -149,7 +152,7 @@ describe("POST /rent/:code", () => {
           .set({ Authorization: `Bearer ${user._body.token}` })
           .expect(201)
           .then(async (response) => {
-            //console.log(response);
+            
             assert.containsAllKeys(response._body.usuario, [
               "id_rent",
               "id_user",    
