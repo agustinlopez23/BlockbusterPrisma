@@ -9,8 +9,7 @@ const MovieController = require("../controllers/MovieController");
 const RentController = require("../controllers/RentController");
 const UserController = require("../controllers/UserController");
 const FavoriteController = require("../controllers/FavoritesController");
-const token =
-  "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImlkIjoyNiwiZW1haWwiOiJjcmlzdGlhbkBnbWFpbC5jb20iLCJkbmkiOiI0MzEyMzQ1MyIsInBob25lIjoiNTU1LTU1NS01NTUiLCJwYXNzd29yZCI6IiQyYiQxMCRzSDJZeFFaZmt6ajljRGljMkluWE9lTFFZLlJ1eEN3d2tTNnBhYW1iYVZhNzBjNFdpYUhraSIsInVwZGF0ZWRBdCI6IjIwMjItMTEtMDdUMDQ6MjI6NDkuMjc0WiIsImNyZWF0ZWRBdCI6IjIwMjItMTEtMDdUMDQ6MjI6NDkuMjc0WiIsInJvbGUiOiJVU0VSIn0sImlhdCI6MTY2Nzc5NTMyMCwiZXhwIjoyMDAwMDAwMDAwfQ.Sf_JuTLixF8pXx-fpUZlPnVt2ywbiWxKdVwL4Jb_B0c";
+
 const bcrypt = require("bcrypt");
 
 // beforeEach(() => {
@@ -20,7 +19,20 @@ const bcrypt = require("bcrypt");
 //   prisma.favoriteFilms.delete()
 
 // });
-
+// const userExample = {
+//   email: "cristian@gmail.com",
+//   password: "avalith",
+//   phone: "555-555-555",
+//   dni: "43123453",
+// };
+// const movieExample = {
+//   codeExample: "2baf70d1-42bb-4437-b551-e5fed5a87abe",
+//   codeExample2: "0440483e-ca0e-4120-8c50-4c8cd9b965d6",
+//   title: "Castle in the Sky",
+//   stock: "5",
+//   rentals: "0",
+//   review: "Colocar Review"
+// }
 describe("POST /register", () => {
   const userExample = {
     email: "cristian@gmail.com",
@@ -88,9 +100,104 @@ describe("POST /register", () => {
       })
       .then(() => done(), done);
   });
-  
+  it("Should logued out", (done) => {
+    request(app)
+      .post("/login")
+      .send({
+        email: "cristian@gmail.com",
+        password: "avalith",
+      })
+      .expect(200)
+      .then((user) => {
+        request(app)
+          .post("/logout")
+          .set({
+            Authorization: `Bearer ${user._body.token}`,
+          })
+          .expect(200);
+      })
+      .then(() => done(), done);
+  });
 });
+describe("POST /rent/:code", () => {
+  // beforeEach(done => {
+  // })
 
+  const userExample = {
+    email: "cristian@gmail.com",
+    password: "avalith",
+  };
+  const movieExample = {
+    codeExample: "2baf70d1-42bb-4437-b551-e5fed5a87abe",
+    title: "Castle in the Sky",
+    stock: "5",
+    rentals: "0",
+    review: "Colocar Review",
+  };
+
+  it("Should return 201 and successfully rent a movie", (done) => {
+    request(app)
+      .post("/login")
+      .send({
+        email: "cristian@gmail.com",
+        password: "avalith",
+      })
+      .expect(200)
+      .then((user) => {
+        request(app)
+          .post(`/rent/${movieExample.codeExample}`)
+          .set({ Authorization: `Bearer ${user._body.token}` })
+          .expect(201)
+          .then(async (response) => {
+            //console.log(response);
+            assert.containsAllKeys(response._body.usuario, [
+              "id_rent",
+              "id_user",    
+              "code",
+              "rent_date",
+              "refund_date",
+              "userRefund_date",
+              "updatedAt",
+              "createdAt",
+            ]);
+            
+          });
+      })
+      .then(() => done(), done);
+
+    //TO_DO
+    //Check status
+    //Chequear si se persistio correctamente la reserva
+    //Chequear que se quito una peli de stock
+    //Chequear que se sumo la renta a las veces alquiladas
+  });
+  it("Should not allow rent if there is no stock", (done) => {
+    //TO-DO
+  });
+  it("Should not allow rent if movie does not exist", (done) => {
+   
+    request(app)
+      .post("/login")
+      .send({
+        email: "cristian@gmail.com",
+        password: "avalith",
+      })
+      .expect(200)
+      .then((user) => {
+        request(app)
+          .post(`/rent/codenotexits`)
+          .set({ Authorization: `Bearer ${user._body.token}` })
+          .expect(404)
+          .then((response) => {
+            console.log(response);
+          });
+      })
+      .then(() => done(), done);
+  });
+  it("Should not allow non logged user to rent a movie", (done) => {
+    //TO-DO
+  });
+});
 
 describe("GET /movies", () => {
   it("Should return status 200", (done) => {
@@ -176,7 +283,6 @@ describe("Not Found handling", () => {
       .get("/")
       .expect(404)
       .then((response) => {
-        
         assert.isNotEmpty(response.res);
         assert.equal(response.res.statusMessage, "Not Found");
       })

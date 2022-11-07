@@ -101,7 +101,7 @@ const register = async (req, res, next) => {
 const logout = (req, res, next) => {
   try {
     req.user = null;
-    console.log("LoguedOut");
+    //console.log("LoguedOut");
     res.redirect("/login");
   } catch (error) {
     const { name } = error;
