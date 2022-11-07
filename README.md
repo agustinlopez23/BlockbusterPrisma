@@ -36,51 +36,51 @@ npm run seed
     1-Sistema de usuarios: Debe crearse un sistema donde se puedan registrar usuarios y hacer login y logout 
 
       Register  ✅
-                route : /register
-                metodo: POST 
-                req.body: {"email":"demo@demo.com", "dni":"1234561","phone":"12567811" , "password":"123456"}
-                res.body:
-                   {
-                      "ok": true,
-                       "usuario": {
-                       "id": 1,
-                       "email": "demo@demo.com",
-                       "dni": "1234561",
-                       "phone": "12567811",
-                       "password": "$2b$10$RzDmUxZ8t4tVNn7WfOA2Wezl9xJT.6LIjqfnAKU4EBBzP1PEwwB8C",
-                       "updatedAt": "2022-11-07T14:36:12.558Z",
-                       "createdAt": "2022-11-07T14:36:12.558Z",
-                       "role": "USER"
-                                  }
-                    }
+       route : /register
+       metodo: POST 
+       req.body: {"email":"demo@demo.com", "dni":"1234561","phone":"12567811" , "password":"123456"}
+       res.body:
+          {
+             "ok": true,
+              "usuario": {
+              "id": 1,
+              "email": "demo@demo.com",
+              "dni": "1234561",
+              "phone": "12567811",
+              "password": "$2b$10$RzDmUxZ8t4tVNn7WfOA2Wezl9xJT.6LIjqfnAKU4EBBzP1PEwwB8C",
+              "updatedAt": "2022-11-07T14:36:12.558Z",
+              "createdAt": "2022-11-07T14:36:12.558Z",
+              "role": "USER"
+                         }
+           }
 
       Login  ✅
-                route : /login
-                metodo: POST
-                req.body: {"email":"demo@demo.com", "password":"123456"}
-                res.body:
-                      {
-                            "ok": true,
-                            "usuario": {
-                                        "id": 2,
-                                        "email": "demo@demo.com",
-                                        "dni": "1234561",
-                                        "phone": "12567811",
-                                        "password": "$2b$10$RzDmUxZ8t4tVNn7WfOA2Wezl9xJT.6LIjqfnAKU4EBBzP1PEwwB8C",
-                                        "updatedAt": "2022-11-07T14:36:12.558Z",
-                                        "createdAt": "2022-11-07T14:36:12.558Z",
-                                        "role": "USER"
-                                    },                                                                                        "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImlkIjoyLCJlbWFpbCI6ImRlbW9AZGVtby5jb20iLCJkbmkiOiIxMjM0NTYxIiwicGhvbmUiOiIxMjU2NzgxMSIsInBhc3N3b3JkIjoiJDJiJDEwJFJ6RG1VeFo4dDR0Vk5uN1dmT0EyV2V6bDl4SlQuNkxJanFmbkFLVTRFQkJ6UDFQRXd3QjhDIiwidXBkYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwiY3JlYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjY3ODMxODcyLCJleHAiOjE2Njg0MzY2NzJ9.6CKsxXWaBwJDXuqxtPelgWuk4oP4dpwt3TId1AWBG9o"
+       route : /login
+       metodo: POST
+       req.body: {"email":"demo@demo.com", "password":"123456"}
+       res.body:
+             {
+                   "ok": true,
+                   "usuario": {
+                               "id": 2,
+                               email": "demo@demo.com",
+                               "dni": "1234561",
+                               "phone": "12567811",
+                               "password": "$2b$10$RzDmUxZ8t4tVNn7WfOA2Wezl9xJT.6LIjqfnAKU4EBBzP1PEwwB8C",
+                               "updatedAt": "2022-11-07T14:36:12.558Z",
+                               "createdAt": "2022-11-07T14:36:12.558Z",
+                               "role": "USER"
+                           },                                                                                        "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImlkIjoyLCJlbWFpbCI6ImRlbW9AZGVtby5jb20iLCJkbmkiOiIxMjM0NTYxIiwicGhvbmUiOiIxMjU2NzgxMSIsInBhc3N3b3JkIjoiJDJiJDEwJFJ6RG1VeFo4dDR0Vk5uN1dmT0EyV2V6bDl4SlQuNkxJanFmbkFLVTRFQkJ6UDFQRXd3QjhDIiwidXBkYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwiY3JlYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjY3ODMxODcyLCJleHAiOjE2Njg0MzY2NzJ9.6CKsxXWaBwJDXuqxtPelgWuk4oP4dpwt3TId1AWBG9o"
                         }
 
        Logout  ✅
-                route : /logout
-                metodo: Get
-                Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImlkIjoyLCJlbWFpbCI6ImRlbW9AZGVtby5jb20iLCJkbmkiOiIxMjM0NTYxIiwicGhvbmUiOiIxMjU2NzgxMSIsInBhc3N3b3JkIjoiJDJiJDEwJFJ6RG1VeFo4dDR0Vk5uN1dmT0EyV2V6bDl4SlQuNkxJanFmbkFLVTRFQkJ6UDFQRXd3QjhDIiwidXBkYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwiY3JlYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjY3ODMxODcyLCJleHAiOjE2Njg0MzY2NzJ9.6CKsxXWaBwJDXuqxtPelgWuk4oP4dpwt3TId1AWBG9o"
-                res.body:
-                    {
-                       You must to logued in
-                    } 
+         route : /logout
+         metodo: Get
+         Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvIjp7ImlkIjoyLCJlbWFpbCI6ImRlbW9AZGVtby5jb20iLCJkbmkiOiIxMjM0NTYxIiwicGhvbmUiOiIxMjU2NzgxMSIsInBhc3N3b3JkIjoiJDJiJDEwJFJ6RG1VeFo4dDR0Vk5uN1dmT0EyV2V6bDl4SlQuNkxJanFmbkFLVTRFQkJ6UDFQRXd3QjhDIiwidXBkYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwiY3JlYXRlZEF0IjoiMjAyMi0xMS0wN1QxNDozNjoxMi41NThaIiwicm9sZSI6IlVTRVIifSwiaWF0IjoxNjY3ODMxODcyLCJleHAiOjE2Njg0MzY2NzJ9.6CKsxXWaBwJDXuqxtPelgWuk4oP4dpwt3TId1AWBG9o"
+         res.body:
+            {
+                You must to logued in
+             } 
 
 
     2-Se debe poder buscar películas por nombre o por código, la información deberá salir desde la API
