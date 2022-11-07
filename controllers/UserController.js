@@ -16,7 +16,7 @@ const login = (req, res, next) => {
           },
         });
       }
-      // Valida que la contraseña escrita por el usuario, sea la almacenada en la db
+      // Validates that the password typed by the user is the one stored in the db.
       if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
         return res.status(400).json({
           ok: false,
@@ -25,7 +25,7 @@ const login = (req, res, next) => {
           },
         });
       }
-      // Genera el token de autenticación
+      // Generate authentication token
       let token = jwt.sign(
         {
           usuario: usuarioDB,

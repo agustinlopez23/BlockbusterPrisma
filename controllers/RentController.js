@@ -66,7 +66,7 @@ const rentMovie = (req, res, next) => {
   
 };
 
-//Funcion agregar un 10% del precio original por cada dia de tardanza
+//Function to add 10% of the original price for each day late.
 const lateRefund = async (originalPrice, daysLate) => {
   let finalPrice = originalPrice;
 
