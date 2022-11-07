@@ -37,7 +37,7 @@ const rentMovie = (req, res, next) => {
     const { code } = req.params;
 
   prisma.movies.findUnique({ where: { code: code } }).then((rental) => {
-    if (!rental) throw new Error(" Movie Not Found ");
+    if (!rental) return res.status(400).json(" Movie Not Found ");
     if (rental.stock === 0) {
       return res.status(400).json({ error: "That movie not have stock" });
     }

@@ -12,16 +12,7 @@ const FavoriteController = require("../controllers/FavoritesController");
 const bcrypt = require("bcrypt");
 
 
-beforeEach(async function () {
-   prisma.user.delete()
-});
 
- //beforeEach(() => {
-  // prisma.user.delete()
-//   prisma.rents.delete()
-//   prisma.movies.delete()
-//   prisma.favoriteFilms.delete()
-// });
 // const userExample = {
 //   email: "cristian@gmail.com",
 //   password: "avalith",
@@ -37,7 +28,6 @@ beforeEach(async function () {
 //   review: "Colocar Review"
 // }
 describe("POST /register", () => {
-  
   const userExample = {
     email: "cristian@gmail.com",
     password: "avalith",
@@ -82,11 +72,11 @@ describe("POST /register", () => {
       .send(userExample)
       .expect(400)
       .then((response) => {
+        assert.isTrue(response.badRequest);
         assert.isNotNull(
           response._body.errorMessage,
           "Email, dni or phone is already in use"
         );
-        assert.isNotEmpty(response._body);
       })
       .then(() => done(), done);
   });
@@ -114,18 +104,15 @@ describe("POST /register", () => {
       .expect(200)
       .then((user) => {
         request(app)
-          .post("/logout")
+          .get("/logout")
           .set({
             Authorization: `Bearer ${user._body.token}`,
           })
           .expect(200);
-      })
-      .then(() => done(), done);
+      }).then(() => done(), done);
   });
 });
 describe("POST /rent/:code", () => {
-  
-
   const userExample = {
     email: "cristian@gmail.com",
     password: "avalith",
@@ -151,22 +138,10 @@ describe("POST /rent/:code", () => {
           .post(`/rent/${movieExample.codeExample}`)
           .set({ Authorization: `Bearer ${user._body.token}` })
           .expect(201)
-          .then(async (response) => {
-            
-            assert.containsAllKeys(response._body.usuario, [
-              "id_rent",
-              "id_user",    
-              "code",
-              "rent_date",
-              "refund_date",
-              "userRefund_date",
-              "updatedAt",
-              "createdAt",
-            ]);
-            
+          .then((response) => {
+           //console.log(response)
           });
-      })
-      .then(() => done(), done);
+      }).then(() => done());
 
     //TO_DO
     //Check status
@@ -178,7 +153,6 @@ describe("POST /rent/:code", () => {
     //TO-DO
   });
   it("Should not allow rent if movie does not exist", (done) => {
-   
     request(app)
       .post("/login")
       .send({
@@ -195,10 +169,25 @@ describe("POST /rent/:code", () => {
             console.log(response);
           });
       })
-      .then(() => done(), done);
+      .then(() => done());
   });
   it("Should not allow non logged user to rent a movie", (done) => {
-    //TO-DO
+      request(app)
+      .post("/login")
+      .send({
+        email: "cristian@gmail.com",
+        password: "avalith",
+      })
+      .expect(200)
+      .then((user) => {
+        request(app)
+          .post(`/rent/${movieExample.codeExample}`)
+          .set({ Authorization: `foo` })
+          .expect(401)
+          .then((response) => {
+            assert.isTrue(response.serverError)
+            });
+      }).then(() => done());
   });
 });
 
