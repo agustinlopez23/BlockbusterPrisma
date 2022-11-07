@@ -1,53 +1,56 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { PrismaClient } = require("@prisma/client");
+const prismaError = require("../helpers/errorsPrisma");
 const prisma = new PrismaClient();
 const login = (req, res, next) => {
   try {
-    if (!email || !password || !dni || !phone) {
-      res.send.json({
+    let { email, password } = req.body;
+    if (!email || !password) {
+      res.status(404).send.json({
         status: "error",
         error: "All fields must be completed",
       });
     } else {
-    let body = req.body;
-    prisma.user
-      .findUnique({ where: { email: body.email } })
-      .then((usuarioDB) => {
-        if (!usuarioDB) {
-          return res.status(400).json({
-            ok: false,
-            err: {
-              message: "Usuario o contraseña incorrectos",
-            },
-          });
-        }
-        // Validates that the password typed by the user is the one stored in the db.
-        if (!bcrypt.compareSync(body.password, usuarioDB.password)) {
-          return res.status(400).json({
-            ok: false,
-            err: {
-              message: "Usuario o contraseña incorrectos",
-            },
-          });
-        }
-        // Generate authentication token
-        let token = jwt.sign(
-          {
-            usuario: usuarioDB,
-          },
-          process.env.SEED_AUTENTICACION,
-          {
-            expiresIn: process.env.CADUCIDAD_TOKEN,
+      let { email, password } = req.body;
+      prisma.user
+        .findUnique({ where: { email: email } })
+        .then((usuarioDB) => {
+          if (!usuarioDB) {
+            return res.status(400).json({
+              ok: false,
+              err: {
+                message: "Usuario o contraseña incorrectos",
+              },
+            });
           }
-        );
-        res.json({
-          ok: true,
-          usuario: usuarioDB,
-          token,
-        });
-      })
-      .catch((error) => next(error))}
+          // Validates that the password typed by the user is the one stored in the db.
+          if (!bcrypt.compareSync(password, usuarioDB.password)) {
+            return res.status(400).json({
+              ok: false,
+              err: {
+                message: "Usuario o contraseña incorrectos",
+              },
+            });
+          }
+          // Generate authentication token
+          let token = jwt.sign(
+            {
+              usuario: usuarioDB,
+            },
+            process.env.SEED_AUTENTICACION,
+            {
+              expiresIn: process.env.CADUCIDAD_TOKEN,
+            }
+          );
+          res.json({
+            ok: true,
+            usuario: usuarioDB,
+            token,
+          });
+        })
+        .catch((error) => next(error));
+    }
   } catch (error) {
     const { name } = error;
     const errorMessage = prismaError[name] || "Internal server error";

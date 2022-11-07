@@ -1,4 +1,5 @@
 const { PrismaClient } = require("@prisma/client");
+const prismaError = require("../helpers/errorsPrisma");
 
 const { rentPrice } = require("../helpers/rentPrice");
 const prisma = new PrismaClient();
