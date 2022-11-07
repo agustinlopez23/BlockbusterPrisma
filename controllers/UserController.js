@@ -4,6 +4,12 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const login = (req, res, next) => {
   try {
+    if (!email || !password || !dni || !phone) {
+      res.send.json({
+        status: "error",
+        error: "All fields must be completed",
+      });
+    } else {
     let body = req.body;
     prisma.user
       .findUnique({ where: { email: body.email } })
@@ -41,7 +47,7 @@ const login = (req, res, next) => {
           token,
         });
       })
-      .catch((error) => next(error));
+      .catch((error) => next(error))}
   } catch (error) {
     const { name } = error;
     const errorMessage = prismaError[name] || "Internal server error";
