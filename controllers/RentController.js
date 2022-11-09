@@ -82,8 +82,11 @@ const rentsByUser = async (req, res, next) => {
     let { order } = req.query;
 
     order ? (order = order) : (order = "asc");
-    let rentsbyuser= await prisma.rents
+    let allHistoryRent= await prisma.rents
       .findMany({ where: { id_user: req.user.id } })
+      //Aca deberia filtrar las tienen userRefund_date en null y mostrarlas
+      let rentsbyuser=allHistoryRent.filter(rent=>rent.userRefund_date===null)
+      console.log(rentsbyuser)
       if (order === "asc") {
 
         rentsbyuser.sort((a, b) => a.rent_date - b.rent_date)
@@ -146,7 +149,7 @@ const returnRent = async (req, res) => {
       message: "The movie was returned",
       price: rentPrice(rent.userRefund_date, rent.refund_date),
     });
-    await prisma.rents.delete({ where: { id_rent: id } });
+    //await prisma.rents.delete({ where: { id_rent: id } });
   } catch (error) {
     console.log(error);
 

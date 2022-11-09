@@ -99,16 +99,17 @@ const register = async (req, res, next) => {
 };
 
 const logout = (req, res, next) => {
+
   try {
-    req.user = null;
     
-    res.redirect("/login");
+    req.user = null
+    res.status(202).json({ msg: 'Unlogged User' })
+    res.redirect("/login")
+
   } catch (error) {
-    const { name } = error;
-    const errorMessage = prismaError[name] || "Internal server error";
-    res.status(500).json({ errorMessage });
+    res.status(500).json({ error })
   }
-};
+}
 module.exports = {
   login,
   register,
