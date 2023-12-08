@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node --watch app.js",
     "test": "mocha --exit",
     "migrate": "npx sequelize-cli db:migrate",
     "seed": "node ./seeders/seeders.js --trace-warnings"
@@ -29,7 +29,7 @@
   },
   "description": "",
   "devDependencies": {
-    "@babel/helper-compilation-targets": "^7.19.1",
+    "@babel/helper-compilation-targets": "7.19.1",
     "assert": "^2.0.0",
     "chai": "^4.3.6",
     "mocha": "^10.0.0",

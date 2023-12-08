@@ -2,6 +2,8 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 const addFavourite = async (req, res, next) => {
+  console.log(req.query)
+
   try {
     const code = req.params.code;
     const { review } = req.body;
@@ -39,6 +41,7 @@ const addFavourite = async (req, res, next) => {
 };
 
 const allFavouritesMovies = async (req, res, next) => {
+  console.log(req.query)
   try {
     let { order } = req.query;
 
@@ -49,12 +52,12 @@ const allFavouritesMovies = async (req, res, next) => {
     if (order === "desc") {
       allFilms.sort((a, b) => b.id - a.id);
     } else if (order === "asc") {
-       allFilms.sort((a, b) => a.id - b.id);
+      allFilms.sort((a, b) => a.id - b.id);
     }
 
     allFilms.length > 0
       ? res.status(200).json(allFilms)
-      : res.status(404).json({ errorMessage: "Movies not found" });
+      : res.status(200).json({ message: "Movies not found" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: "Error in Data Base" });

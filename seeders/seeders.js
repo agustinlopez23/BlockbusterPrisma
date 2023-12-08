@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 const axios = require("axios");
 
 async function fetchMovies() {
-  const response = axios.get("https:ghibliapi.herokuapp.com/films");
+  const response = axios.get("https://ghibliapi.dev/films");
   const data = await response;
 
   const COMMON_DATA = {

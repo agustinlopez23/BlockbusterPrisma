@@ -8,7 +8,7 @@ const login = (req, res, next) => {
     let { email, password } = req.body;
     if (!email || !password) {
       res.status(400)
-          .json({ errorMessage: "All Fields need to be completed" });
+        .json({ status: "400", errorMessage: "All Fields need to be completed" });
     } else {
       let { email, password } = req.body;
       prisma.user
@@ -101,7 +101,7 @@ const register = async (req, res, next) => {
 const logout = (req, res, next) => {
 
   try {
-    
+
     req.user = null
     res.status(202).json({ msg: 'Unlogged User' })
     res.redirect("/login")
